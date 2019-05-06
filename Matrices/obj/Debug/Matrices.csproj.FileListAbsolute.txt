@@ -1,0 +1,9 @@
+C:\Users\Richard\escritorio\2220171018\VisualSpace\Matrices\Matrices\bin\Debug\Matrices.exe.config
+C:\Users\Richard\escritorio\2220171018\VisualSpace\Matrices\Matrices\bin\Debug\Matrices.exe
+C:\Users\Richard\escritorio\2220171018\VisualSpace\Matrices\Matrices\bin\Debug\Matrices.pdb
+C:\Users\Richard\escritorio\2220171018\VisualSpace\Matrices\Matrices\obj\Debug\Matrices.csprojResolveAssemblyReference.cache
+C:\Users\Richard\escritorio\2220171018\VisualSpace\Matrices\Matrices\obj\Debug\Matrices.GUIPrincipal.resources
+C:\Users\Richard\escritorio\2220171018\VisualSpace\Matrices\Matrices\obj\Debug\Matrices.Properties.Resources.resources
+C:\Users\Richard\escritorio\2220171018\VisualSpace\Matrices\Matrices\obj\Debug\Matrices.csproj.GenerateResource.Cache
+C:\Users\Richard\escritorio\2220171018\VisualSpace\Matrices\Matrices\obj\Debug\Matrices.exe
+C:\Users\Richard\escritorio\2220171018\VisualSpace\Matrices\Matrices\obj\Debug\Matrices.pdb

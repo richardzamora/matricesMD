@@ -16,3 +16,6 @@ D:\Carpetas\Documentos\Visual Studio 2015\Projects\matricesMD\Matrices\obj\Debug
 D:\Carpetas\Documentos\Visual Studio 2015\Projects\matricesMD\Matrices\obj\Debug\Matrices.GUIPrincipal.resources
 D:\Carpetas\Documentos\Visual Studio 2015\Projects\matricesMD\Matrices\obj\Debug\Matrices.Properties.Resources.resources
 D:\Carpetas\Documentos\Visual Studio 2015\Projects\matricesMD\Matrices\obj\Debug\Matrices.csproj.GenerateResource.Cache
+C:\Users\ESTEBAN PC\Documents\Visual Studio 2015\Projects\matricesMD\Matrices\bin\Debug\Matrices.exe.config
+C:\Users\ESTEBAN PC\Documents\Visual Studio 2015\Projects\matricesMD\Matrices\obj\Debug\Matrices.exe
+C:\Users\ESTEBAN PC\Documents\Visual Studio 2015\Projects\matricesMD\Matrices\obj\Debug\Matrices.pdb

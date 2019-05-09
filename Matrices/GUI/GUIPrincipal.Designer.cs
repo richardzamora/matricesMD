@@ -140,7 +140,6 @@
             this.txtN.Name = "txtN";
             this.txtN.Size = new System.Drawing.Size(88, 32);
             this.txtN.TabIndex = 7;
-            this.txtN.Text = "cd";
             // 
             // GUIPrincipal
             // 

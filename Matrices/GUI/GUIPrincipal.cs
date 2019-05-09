@@ -96,7 +96,7 @@ namespace Matrices
                 int j = 0;
                 while (j < dgvA.Rows.Count)
                 {
-                    dgvA.Rows[i].Cells[j].Value = random.Next(1,10);
+                    dgvA.Rows[i].Cells[j].Value = random.Next(1, 10);
                     dgvB.Rows[i].Cells[j].Value = random.Next(1, 10);
                     j++;
                 }

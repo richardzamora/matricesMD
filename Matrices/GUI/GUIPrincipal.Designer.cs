@@ -114,6 +114,7 @@
             this.btnMulClasica.TabIndex = 6;
             this.btnMulClasica.Text = "Multiplicación Clásica";
             this.btnMulClasica.UseVisualStyleBackColor = true;
+            this.btnMulClasica.Click += new System.EventHandler(this.btnMulClasica_Click);
             // 
             // btnWinograd
             // 

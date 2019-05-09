@@ -56,12 +56,13 @@ namespace Matrices
 
             dgvClasico.Rows.Clear();
             dgvClasico.Columns.Clear();
-
+            /*
             dgvStrassen.Rows.Clear();
             dgvStrassen.Columns.Clear();
 
             dgvWinograd.Rows.Clear();
             dgvWinograd.Columns.Clear();
+            */
         }
 
         private void addColums()
@@ -70,8 +71,8 @@ namespace Matrices
             dgvB.Columns.Add("", "");
 
             dgvClasico.Columns.Add("", "");
-            dgvStrassen.Columns.Add("", "");
-            dgvWinograd.Columns.Add("", "");
+           // dgvStrassen.Columns.Add("", "");
+           // dgvWinograd.Columns.Add("", "");
         }
         private void addRows()
         {
@@ -79,8 +80,8 @@ namespace Matrices
             dgvB.Rows.Add();
 
             dgvClasico.Rows.Add();
-            dgvStrassen.Rows.Add();
-            dgvWinograd.Rows.Add();
+           // dgvStrassen.Rows.Add();
+          //  dgvWinograd.Rows.Add();
         }
 
         private void btnLlenarMatrices_Click(object sender, EventArgs e)
@@ -102,6 +103,47 @@ namespace Matrices
                 }
                 i++;
             }
+        }
+
+        private void btnMulClasica_Click(object sender, EventArgs e)
+        {
+            int i = 0;
+            while(i < dgvA.Columns.Count)
+            {
+                int j = 0;
+                int[] rows = getRow(dgvA, i);
+                while (j < dgvB.Rows.Count)
+                {
+                    int[] columns = getColumn(dgvB, j);
+                    dgvClasico.Rows[i].Cells[j].Value = Servicios.ServiciosMatriz.multiplicacionClasica(rows, columns);
+                    j++;
+                }
+                i++;
+            }
+        }
+
+        private int[] getRow(DataGridView grilla, int pos)
+        {
+            int[] fila = new int[grilla.Rows.Count];
+
+            for (int i = 0; i < fila.Length; i++)
+            {
+                fila[i] = (int) grilla.Rows[pos].Cells[i].Value;
+            }
+
+            return fila;
+        }
+
+        private int[] getColumn(DataGridView grilla, int pos)
+        {
+            int[] columna = new int[grilla.Rows.Count];
+
+            for (int i = 0; i < columna.Length; i++)
+            {
+                columna[i] = (int)grilla.Rows[i].Cells[pos].Value;
+            }
+
+            return columna;
         }
     }
 }

@@ -29,11 +29,16 @@ namespace Matrices
                 while (count < max)
                 {
                     addColums();
+                    addRows();
                     count++;
-                    if (count < max)
-                    {
-                        addRows();
-                    }
+          
+                    dgvA.AllowUserToAddRows = false;
+                    dgvB.AllowUserToAddRows = false;
+                    dgvClasico.AllowUserToAddRows = false;
+                    dgvStrassen.AllowUserToAddRows = false;
+                    dgvWinograd.AllowUserToAddRows = false;
+
+
                 }
                 
             }
@@ -126,7 +131,7 @@ namespace Matrices
 
             for (int i = 0; i < fila.Length; i++)
             {
-                fila[i] = (int) grilla.Rows[pos].Cells[i].Value;
+                fila[i] = int.Parse(grilla.Rows[pos].Cells[i].Value.ToString());
             }
 
             return fila;
@@ -138,7 +143,7 @@ namespace Matrices
 
             for (int i = 0; i < columna.Length; i++)
             {
-                columna[i] = (int)grilla.Rows[i].Cells[pos].Value;
+                columna[i] = int.Parse(grilla.Rows[i].Cells[pos].Value.ToString());
             }
 
             return columna;

@@ -133,6 +133,7 @@
             this.btnStrassen.TabIndex = 6;
             this.btnStrassen.Text = "Multiplicación Strassen";
             this.btnStrassen.UseVisualStyleBackColor = true;
+            this.btnStrassen.Click += new System.EventHandler(this.btnStrassen_Click);
             // 
             // txtN
             // 

@@ -88,11 +88,12 @@ namespace Matrices
         {
             llenarMatrizRandom();
         }
+
         private void llenarMatrizRandom()
         {
             int i = 0;
             Random random = new Random();
-            while (i<dgvA.Columns.Count)
+            while (i < dgvA.Columns.Count)
             {
                 int j = 0;
                 while (j < dgvA.Rows.Count)
@@ -144,6 +145,31 @@ namespace Matrices
             }
 
             return columna;
+        }
+
+        private double[,] getMatiz(DataGridView grilla)
+        {
+            double[,] respuesta = new double[dgvB.Rows.Count, dgvA.Columns.Count];
+
+            for(int i = 0; i < dgvB.Rows.Count; i++)
+            {
+                for (int j = 0; j < dgvA.Columns.Count; j++)
+                {
+                    respuesta[i,j] = (double) grilla.Rows[i].Cells[j].Value;
+                }
+            }
+
+            return respuesta;
+        }
+
+        private void btnStrassen_Click(object sender, EventArgs e)
+        {
+            Servicios.Matriz mA = new Servicios.Matriz(getMatiz(dgvA));
+            Servicios.Matriz mB = new Servicios.Matriz(getMatiz(dgvB));
+
+            Servicios.Matriz matriz = Servicios.Matriz.multiplicacionPorStrassen(mA, mB);
+
+            double[,] matrizRespuesta;
         }
     }
 }

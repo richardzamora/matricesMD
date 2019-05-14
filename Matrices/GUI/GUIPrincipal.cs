@@ -56,10 +56,10 @@ namespace Matrices
 
             dgvClasico.Rows.Clear();
             dgvClasico.Columns.Clear();
-            /*
+
             dgvStrassen.Rows.Clear();
             dgvStrassen.Columns.Clear();
-
+            /*
             dgvWinograd.Rows.Clear();
             dgvWinograd.Columns.Clear();
             */
@@ -71,7 +71,7 @@ namespace Matrices
             dgvB.Columns.Add("", "");
 
             dgvClasico.Columns.Add("", "");
-           // dgvStrassen.Columns.Add("", "");
+            dgvStrassen.Columns.Add("", "");
            // dgvWinograd.Columns.Add("", "");
         }
         private void addRows()
@@ -80,7 +80,7 @@ namespace Matrices
             dgvB.Rows.Add();
 
             dgvClasico.Rows.Add();
-           // dgvStrassen.Rows.Add();
+            dgvStrassen.Rows.Add();
           //  dgvWinograd.Rows.Add();
         }
 
@@ -147,6 +147,7 @@ namespace Matrices
             return columna;
         }
 
+        //Aquí da un error y no tengo ni pajolera idea de porqué es
         private double[,] getMatiz(DataGridView grilla)
         {
             double[,] respuesta = new double[dgvB.Rows.Count, dgvA.Columns.Count];
@@ -155,7 +156,7 @@ namespace Matrices
             {
                 for (int j = 0; j < dgvA.Columns.Count; j++)
                 {
-                    respuesta[i,j] = (double) grilla.Rows[i].Cells[j].Value;
+                    respuesta[i,j] = Convert.ToDouble(grilla.Rows[i].Cells[j].Value);
                 }
             }
 
@@ -169,7 +170,20 @@ namespace Matrices
 
             Servicios.Matriz matriz = Servicios.Matriz.multiplicacionPorStrassen(mA, mB);
 
-            double[,] matrizRespuesta;
+            double[,] matrizRespuesta = matriz.getValues();
+
+            int i = 0;
+            while (i < dgvStrassen.Columns.Count)
+            {
+                int j = 0;
+                while (j < dgvStrassen.Rows.Count)
+                {
+                    dgvStrassen.Rows[i].Cells[j].Value = Convert.ToInt32(matrizRespuesta[i, j]);
+                    j++;
+                }
+                i++;
+            }
+
         }
     }
 }

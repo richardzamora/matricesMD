@@ -53,16 +53,28 @@ namespace Matrices.Servicios
                 values[row, col] = value;
             }
         }
+
+        //
+        public double[,] getValues()
+        {
+            return values;
+        }
+
+        public void setValues(double[,] pValues)
+        {
+            this.values = pValues;
+        }
+
         #endregion
 
         #region Constructor
         public Matriz(int m, int n)
         {
-            if(m <= 0)
+            if (m <= 0)
             {
                 throw new ArgumentOutOfRangeException("m es menor o igual a cero");
             }
-            if(n <= 0)
+            if (n <= 0)
             {
                 throw new ArgumentOutOfRangeException("n es menor o igual a cero");
             }
@@ -86,11 +98,11 @@ namespace Matrices.Servicios
         {
             Matriz a = this, b = (Matriz)obj;
 
-            if(b == null)
+            if (b == null)
             {
                 return false;
             }
-            if(a.Rows != b.Rows || a.Columns != b.Columns)
+            if (a.Rows != b.Rows || a.Columns != b.Columns)
             {
                 return false;
             }
@@ -160,7 +172,7 @@ namespace Matrices.Servicios
                 for (int col = 0; col < b.Columns; col++)
                 {
                     double tmp = 0;
-                    for (int i = 0; i < a.Columns; i++) 
+                    for (int i = 0; i < a.Columns; i++)
                         tmp += a[row, i] * b[i, col];
 
                     result[row, col] = tmp;
@@ -178,36 +190,64 @@ namespace Matrices.Servicios
                 throw new ArgumentException("Las matrices no son cuadradas");
             }
 
-            int N = b.Rows;
-            int halfN = N / 2;
+            int N = a.Rows;
 
-            var a11 = a.SubMatriz(0, halfN, 0, halfN);
-            var a12 = a.SubMatriz(0, halfN, halfN, N);
-            var a21 = a.SubMatriz(halfN, N, 0, halfN);
-            var a22 = a.SubMatriz(halfN, N, halfN, N);
-
-            var b11 = b.SubMatriz(0, halfN, 0, halfN);
-            var b12 = b.SubMatriz(0, halfN, halfN, N);
-            var b21 = b.SubMatriz(halfN, N, 0, halfN);
-            var b22 = b.SubMatriz(halfN, N, halfN, N);
-
-            Matriz[] m = new Matriz[]
+            if (N == 2)
             {
-                multiplicacionPorStrassen(a11 + a22, b11 + b22),
-                multiplicacionPorStrassen(a21 + a22, b11),
-                multiplicacionPorStrassen(a11, b12 - b22),
-                multiplicacionPorStrassen(a22, b21 - b11),
-                multiplicacionPorStrassen(a11 + a12, b22),
-                multiplicacionPorStrassen(a21 - a11, b11 + b12),
-                multiplicacionPorStrassen(a12 - a22, b21 + b22)
-            };
-        
-            var c11 = m[0] + m[3] - m[4] + m[6];
-            var c12 = m[2] + m[4];
-            var c21 = m[1] + m[3];
-            var c22 = m[0] - m[1] + m[2] + m[5];
+                double[,] A = a.getValues();
+                double[,] B = b.getValues();
 
-            return combinacionSubMatrices(c11, c12, c21, c22);
+                double p1 = A[0, 0] * (B[0, 1] - B[1, 1]);
+                double p2 = (A[0, 0] + A[0, 1]) * B[1, 1];
+                double p3 = (A[1, 0] + A[1, 1]) * B[0, 0];
+                double p4 = A[1, 1] * (B[1, 0] - B[0, 0]);
+                double p5 = (A[0, 0] + A[1, 1]) * (B[0, 0] + B[1, 1]);
+                double p6 = (A[0, 1] - A[1, 1]) * (B[1, 0] + B[1, 1]);
+                double p7 = (A[0, 0] - A[1, 0]) * (B[0, 0] + B[0, 1]);
+
+                double r = p5 + p6 + p4 - p2;
+                double s = p1 + p2;
+                double t = p3 + p4;
+                double u = p1 - p7 - p3 + p5;
+
+                double[,] C = { { r, s }, { t, u } };
+                Matriz R = new Matriz(C);
+
+                return R;
+            }
+            else
+            {
+                int halfN = N / 2;
+
+                Matriz A = a.SubMatriz(0, halfN, 0, halfN);
+                Matriz B = a.SubMatriz(0, halfN, halfN, N);
+                Matriz C = a.SubMatriz(halfN, N, 0, halfN);
+                Matriz D = a.SubMatriz(halfN, N, halfN, N);
+                Matriz E = b.SubMatriz(0, halfN, 0, halfN);
+                Matriz F = b.SubMatriz(0, halfN, halfN, N);
+                Matriz G = b.SubMatriz(halfN, N, 0, halfN);
+                Matriz H = b.SubMatriz(halfN, N, halfN, N);
+
+                var p1 = multiplicacionPorStrassen(A, (F - H));
+                var p2 = multiplicacionPorStrassen((A + B), H);
+                var p3 = multiplicacionPorStrassen((C + D), E);
+                var p4 = multiplicacionPorStrassen(D, (G - E));
+                var p5 = multiplicacionPorStrassen((A + D), (E + H));
+                var p6 = multiplicacionPorStrassen((B - D), (G + H));
+                var p7 = multiplicacionPorStrassen((A - C), (E + F));
+
+                var r = p5 + p6 + p4 - p2;
+                var s = p1 + p2;
+                var t = p3 + p4;
+                var u = p1 - p3 - p7 + p5;
+
+                return combinacionSubMatrices(r, s, t, u);
+            }
+        }
+
+        public static Matriz multiplicacionPorWinograd(Matriz a, Matriz b)
+        {
+            return null;
         }
 
         private Matriz SubMatriz(int rowFrom, int rowTo, int colFrom, int colTo)
@@ -216,6 +256,7 @@ namespace Matrices.Servicios
             for (int row = rowFrom, i = 0; row < rowTo; row++, i++)
                 for (int col = colFrom, j = 0; col < colTo; col++, j++)
                     result[i, j] = values[row, col];
+
             return result;
         }
 

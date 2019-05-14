@@ -124,6 +124,7 @@
             this.btnWinograd.TabIndex = 6;
             this.btnWinograd.Text = "Multiplicación Winograd";
             this.btnWinograd.UseVisualStyleBackColor = true;
+            this.btnWinograd.Click += new System.EventHandler(this.btnWinograd_Click);
             // 
             // btnStrassen
             // 

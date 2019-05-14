@@ -43,9 +43,6 @@ namespace Matrices
             }
         }
 
-        
-
-
         private void limpiarMatrices()
         {
             dgvA.Rows.Clear();
@@ -59,10 +56,10 @@ namespace Matrices
 
             dgvStrassen.Rows.Clear();
             dgvStrassen.Columns.Clear();
-            /*
+
             dgvWinograd.Rows.Clear();
             dgvWinograd.Columns.Clear();
-            */
+
         }
 
         private void addColums()
@@ -72,7 +69,7 @@ namespace Matrices
 
             dgvClasico.Columns.Add("", "");
             dgvStrassen.Columns.Add("", "");
-           // dgvWinograd.Columns.Add("", "");
+            dgvWinograd.Columns.Add("", "");
         }
         private void addRows()
         {
@@ -81,7 +78,7 @@ namespace Matrices
 
             dgvClasico.Rows.Add();
             dgvStrassen.Rows.Add();
-          //  dgvWinograd.Rows.Add();
+            dgvWinograd.Rows.Add();
         }
 
         private void btnLlenarMatrices_Click(object sender, EventArgs e)
@@ -147,7 +144,6 @@ namespace Matrices
             return columna;
         }
 
-        //Aquí da un error y no tengo ni pajolera idea de porqué es
         private double[,] getMatiz(DataGridView grilla)
         {
             double[,] respuesta = new double[dgvB.Rows.Count, dgvA.Columns.Count];
@@ -184,6 +180,28 @@ namespace Matrices
                 i++;
             }
 
+        }
+
+        private void btnWinograd_Click(object sender, EventArgs e)
+        {
+            Servicios.Matriz mA = new Servicios.Matriz(getMatiz(dgvA));
+            Servicios.Matriz mB = new Servicios.Matriz(getMatiz(dgvB));
+
+            Servicios.Matriz matriz = Servicios.Matriz.multiplicacionPorWinograd(mA, mB);
+
+            double[,] matrizRespuesta = matriz.getValues();
+
+            int i = 0;
+            while (i < dgvWinograd.Columns.Count)
+            {
+                int j = 0;
+                while (j < dgvWinograd.Rows.Count)
+                {
+                    dgvWinograd.Rows[i].Cells[j].Value = Convert.ToInt32(matrizRespuesta[i, j]);
+                    j++;
+                }
+                i++;
+            }
         }
     }
 }

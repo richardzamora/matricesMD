@@ -245,9 +245,69 @@ namespace Matrices.Servicios
             }
         }
 
+
         public static Matriz multiplicacionPorWinograd(Matriz a, Matriz b)
         {
-            return null;
+            var sizes = new int[] { a.Rows, a.Columns, b.Rows, b.Columns };
+            if (sizes.Distinct().Count() != 1 || (a.Rows & (a.Rows - 1)) != 0)
+            {
+                throw new ArgumentException("Las matrices no son cuadradas");
+            }
+
+            int N = a.Rows;
+
+            if (N == 2)
+            {
+                double[,] A = a.getValues();
+                double[,] B = b.getValues();
+
+                double p1 = (A[1, 0] + A[1, 1] - A[0, 0]) * (B[1, 1] - B[0, 1] + B[0, 0]);
+                double p2 = A[0, 0] * B[0, 0];
+                double p3 = A[0, 1] * B[1, 0];
+                double p4 = (A[0, 0] - A[1, 0]) * (B[1, 1] - B[0, 1]);
+                double p5 = (A[1, 0] + A[1, 1]) * (B[0, 1] - B[0, 0]);
+                double p6 = (A[0, 1] - A[1, 0] + A[0, 0] - A[1, 1]) * B[1, 1];
+                double p7 = A[1, 1] * (B[1, 0] - B[1, 1] + B[0, 1] - B[0, 0]);
+
+                double r = p2 + p3;
+                double s = p1 + p2 + p5 + p6;
+                double t = p1 + p2 + p4 + p7;
+                double u = p1 + p2 + p4 + p5;
+
+                double[,] C = { { r, s }, { t, u } };
+                Matriz R = new Matriz(C);
+
+                return R;
+            }
+            else
+            {
+                int halfN = N / 2;
+
+
+                Matriz A = a.SubMatriz(0, halfN, 0, halfN);
+                Matriz B = a.SubMatriz(0, halfN, halfN, N);
+                Matriz C = a.SubMatriz(halfN, N, 0, halfN);
+                Matriz D = a.SubMatriz(halfN, N, halfN, N);
+                Matriz E = b.SubMatriz(0, halfN, 0, halfN);
+                Matriz F = b.SubMatriz(0, halfN, halfN, N);
+                Matriz G = b.SubMatriz(halfN, N, 0, halfN);
+                Matriz H = b.SubMatriz(halfN, N, halfN, N);
+
+                var p1 = multiplicacionPorStrassen((C + D - A), (H - F + E));
+                var p2 = multiplicacionPorStrassen(A, E);
+                var p3 = multiplicacionPorStrassen(B, G);
+                var p4 = multiplicacionPorStrassen((A - C), (H - F));
+                var p5 = multiplicacionPorStrassen((C + D), (F - E));
+                var p6 = multiplicacionPorStrassen((B - C + A - D), H);
+                var p7 = multiplicacionPorStrassen(D, (G - H + F - E));
+
+                var r = p2 + p3;
+                var s = p1 + p2 + p5 + p6;
+                var t = p1 + p2 + p4 + p7;
+                var u = p1 + p2 + p4 + p5;
+
+                return combinacionSubMatrices(r, s, t, u);
+            }
         }
 
         private Matriz SubMatriz(int rowFrom, int rowTo, int colFrom, int colTo)

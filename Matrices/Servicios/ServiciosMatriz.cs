@@ -19,220 +19,108 @@ namespace Matrices.Servicios
 
             return zelda;
         }
-    }
 
-    public sealed class Matriz
-    {
-        #region Private variables y 
-        public int Rows
+
+        public static int[,] multiplicacionStrassen(int[,] fila, int[,] columna)
         {
-            get
-            {
-                return values.GetLength(0);
-            }
-        }
+            int[,] respuesta = new int[2,2];
 
-        public int Columns
-        {
-            get
+            for (int i = 0; i < fila.Length/2; i+=2)
             {
-                return values.GetLength(1);
-            }
-        }
+                int a, b, c, d, e, f, g, h;
 
-        private double[,] values;
+                a = fila[i, 0];
+                b = fila[i+1, 0];
+                c = fila[i, 1];
+                d = fila[i+1, 1];
 
-        public double this[int row, int col]
-        {
-            get
-            {
-                return values[row, col];
-            }
-            set
-            {
-                values[row, col] = value;
-            }
-        }
-        #endregion
+                e = columna[i, 0];
+                f = columna[i, 1];
+                g = columna[i+1, 0];
+                h = columna[i+1, 1];
 
-        #region Constructor
-        public Matriz(int m, int n)
-        {
-            if(m <= 0)
-            {
-                throw new ArgumentOutOfRangeException("m es menor o igual a cero");
-            }
-            if(n <= 0)
-            {
-                throw new ArgumentOutOfRangeException("n es menor o igual a cero");
+                int[,] calcTemp = calculoStrassen(a, b, c, d, e, f, g, h);
+                respuesta = sumarMatrices(respuesta, calcTemp);
             }
 
-            values = new double[m, n];
+            return respuesta;
         }
-        public Matriz(int m) : this(m, m) { }
 
-        public Matriz(double[,] values)
+        private static int[,] sumarMatrices(int[,] mA, int[,] mB)
         {
-            if (values == null)
+            int[,] respuesta = new int[2, 2];
+
+            respuesta[0, 0] = mA[0, 0] + mB[0,0];
+            respuesta[0, 1] = mA[0, 1] + mB[0, 1];
+            respuesta[1, 0] = mA[1, 0] + mB[1, 0];
+            respuesta[1, 1] = mA[1, 1] + mB[1, 1];
+
+            return respuesta;
+        }
+
+        private static int[,] calculoStrassen(int a, int b, int c, int d, int e, int f, int g, int h)
+        {
+            int[,] respuesta = new int[2, 2];
+
+            int p1 = a * (f - h);
+            int p2 = (a + b) * h;
+            int p3 = (c + d) * e;
+            int p4 = d * (g - e);
+            int p5 = (a + d) * (e + h);
+            int p6 = (b - d) * (g + h);
+            int p7 = (a - c) * (e + f);
+
+            respuesta[0, 0] = p5 + p6 + p4 - p2;
+            respuesta[0, 1] = p1 + p2;
+            respuesta[1, 0] = p3 + p4;
+            respuesta[1, 1] = p1 - p7 - p3 + p5;
+
+            return respuesta;
+        }
+
+        public static int[,] multiplicacionWinograd(int[,] fila, int[,] columna)
+        {
+            int[,] respuesta = new int[2, 2];
+
+            for (int i = 0; i < fila.Length / 2; i += 2)
             {
-                throw new ArgumentNullException("values == null.");
-            }
-            this.values = values;
-        }
-        #endregion
+                int a, b, c, d, e, f, g, h;
 
-        #region methods
-        public override bool Equals(object obj)
-        {
-            Matriz a = this, b = (Matriz)obj;
+                a = fila[i, 0];
+                b = fila[i + 1, 0];
+                c = fila[i, 1];
+                d = fila[i + 1, 1];
 
-            if(b == null)
-            {
-                return false;
-            }
-            if(a.Rows != b.Rows || a.Columns != b.Columns)
-            {
-                return false;
-            }
+                e = columna[i, 0];
+                f = columna[i, 1];
+                g = columna[i + 1, 0];
+                h = columna[i + 1, 1];
 
-            for (int row = 0; row < a.Rows; row++)
-                for (int col = 0; col < a.Columns; col++)
-                    if (a[row, col] != b[row, col]) return false;
-
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-        #endregion
-
-        #region Operadores
-        public static Matriz operator +(Matriz a, Matriz b)
-        {
-            return Matriz.Add(a, b);
-        }
-
-        public static Matriz operator -(Matriz a, Matriz b)
-        {
-            return Matriz.Subtract(a, b);
-        }
-        #endregion
-
-        #region metodos
-        public static Matriz Add(Matriz a, Matriz b)
-        {
-            if (a.Rows != b.Rows || a.Columns != b.Columns)
-                throw new ArgumentException("Matrices no identificadas");
-
-            Matriz result = new Matriz(a.Rows, a.Columns);
-
-            for (int row = 0; row < a.Rows; row++)
-                for (int col = 0; col < a.Columns; col++)
-                    result[row, col] = a[row, col] + b[row, col];
-
-            return result;
-        }
-
-        public static Matriz Subtract(Matriz a, Matriz b)
-        {
-            if (a.Rows != b.Rows || a.Columns != b.Columns)
-                throw new ArgumentException("Matrices no identificadas");
-
-            Matriz result = new Matriz(a.Rows, a.Columns);
-
-            for (int row = 0; row < a.Rows; row++)
-                for (int col = 0; col < a.Columns; col++)
-                    result[row, col] = a[row, col] - b[row, col];
-
-            return result;
-        }
-
-        public static Matriz multiplicacionNormal(Matriz a, Matriz b)
-        {
-            if (a.Columns != b.Rows)
-                throw new ArgumentException("El número de matrices ingresadas no es la misma que b");
-
-            Matriz result = new Matriz(a.Rows, b.Columns);
-
-            for (int row = 0; row < a.Rows; row++)
-            {
-                for (int col = 0; col < b.Columns; col++)
-                {
-                    double tmp = 0;
-                    for (int i = 0; i < a.Columns; i++) 
-                        tmp += a[row, i] * b[i, col];
-
-                    result[row, col] = tmp;
-                }
+                int[,] calcTemp = calculoWinograd(a, b, c, d, e, f, g, h);
+                respuesta = sumarMatrices(respuesta, calcTemp);
             }
 
-            return result;
+            return respuesta;
         }
 
-        public static Matriz multiplicacionPorStrassen(Matriz a, Matriz b)
+        private static int[,] calculoWinograd(int a, int b, int c, int d, int e, int f, int g, int h)
         {
-            var sizes = new int[] { a.Rows, a.Columns, b.Rows, b.Columns };
-            if (sizes.Distinct().Count() != 1 || (a.Rows & (a.Rows - 1)) != 0)
-            {
-                throw new ArgumentException("Las matrices no son cuadradas");
-            }
+            int[,] respuesta = new int[2, 2];
 
-            int N = b.Rows;
-            int halfN = N / 2;
+            int p1 = (c + d - a) * (h - f + e);
+            int p2 = a * e;
+            int p3 = b * g;
+            int p4 = (a - c) * (h - f);
+            int p5 = (c + d) * (f - e);
+            int p6 = (b - c + a - d) * h;
+            int p7 = d * (g - h + f - e);
 
-            var a11 = a.SubMatriz(0, halfN, 0, halfN);
-            var a12 = a.SubMatriz(0, halfN, halfN, N);
-            var a21 = a.SubMatriz(halfN, N, 0, halfN);
-            var a22 = a.SubMatriz(halfN, N, halfN, N);
+            respuesta[0, 0] = p2 + p3;
+            respuesta[0, 1] = p1 + p2 + p5 + p6;
+            respuesta[1, 0] = p1 + p2 + p4 + p7;
+            respuesta[1, 1] = p1 + p2 + p4 + p5;
 
-            var b11 = b.SubMatriz(0, halfN, 0, halfN);
-            var b12 = b.SubMatriz(0, halfN, halfN, N);
-            var b21 = b.SubMatriz(halfN, N, 0, halfN);
-            var b22 = b.SubMatriz(halfN, N, halfN, N);
-
-            Matriz[] m = new Matriz[]
-            {
-                multiplicacionPorStrassen(a11 + a22, b11 + b22),
-                multiplicacionPorStrassen(a21 + a22, b11),
-                multiplicacionPorStrassen(a11, b12 - b22),
-                multiplicacionPorStrassen(a22, b21 - b11),
-                multiplicacionPorStrassen(a11 + a12, b22),
-                multiplicacionPorStrassen(a21 - a11, b11 + b12),
-                multiplicacionPorStrassen(a12 - a22, b21 + b22)
-            };
-        
-            var c11 = m[0] + m[3] - m[4] + m[6];
-            var c12 = m[2] + m[4];
-            var c21 = m[1] + m[3];
-            var c22 = m[0] - m[1] + m[2] + m[5];
-
-            return combinacionSubMatrices(c11, c12, c21, c22);
+            return respuesta;
         }
-
-        private Matriz SubMatriz(int rowFrom, int rowTo, int colFrom, int colTo)
-        {
-            Matriz result = new Matriz(rowTo - rowFrom, colTo - colFrom);
-            for (int row = rowFrom, i = 0; row < rowTo; row++, i++)
-                for (int col = colFrom, j = 0; col < colTo; col++, j++)
-                    result[i, j] = values[row, col];
-            return result;
-        }
-
-        private static Matriz combinacionSubMatrices(Matriz a11, Matriz a12, Matriz a21, Matriz a22)
-        {
-            Matriz result = new Matriz(a11.Rows * 2);
-            int shift = a11.Rows;
-            for (int row = 0; row < a11.Rows; row++)
-                for (int col = 0; col < a11.Columns; col++)
-                {
-                    result[row, col] = a11[row, col];
-                    result[row, col + shift] = a12[row, col];
-                    result[row + shift, col] = a21[row, col];
-                    result[row + shift, col + shift] = a22[row, col];
-                }
-            return result;
-        }
-        #endregion
     }
 }
